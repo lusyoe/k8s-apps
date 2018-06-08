@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexus2
+  template:
+    metadata:
+      labels:
+        app: nexus2
+    spec:
+      containers:
+      - name: nexus2
+        image: sonatype/nexus
+        volumeMounts:
+        - mountPath: /sonatype-work
+          name: nexus2-volume
+        ports:
+        - containerPort: 8081
+      volumes:
+      - name: nexus2-volume
+        persistentVolumeClaim:
+          claimName: nexus2-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus2-service
+spec:
+  type: ClusterIP
+  selector:
+    app: nexus2
+  ports:
+    - name: nexus2-port
+      port: 8081
+      targetPort: 8081
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nexus2
+spec:
+  rules:
+  - host: nexus.k2.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nexus2-service
+          servicePort: nexus2-port
