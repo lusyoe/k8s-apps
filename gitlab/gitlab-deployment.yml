@@ -32,7 +32,7 @@ spec:
           value:
 
         - name: GITLAB_HOST
-          value: git.default.cluster.local
+          value: git.k2.com
         - name: GITLAB_PORT
           value: "80"
         - name: GITLAB_SSH_PORT
