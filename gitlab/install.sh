@@ -5,10 +5,17 @@ if ! which kubectl; then
   exit 1
 fi
 
+# create the pvc
+for pvc in *-pvc.yml
+do
+  echo -n "Creating $pvc... "
+  kubectl -f $pvc create
+done
+
 # create the ingress
 for ing in *-ing.yml
 do
-  echo -n "Creating $ing..."
+  echo -n "Creating $ing... "
   kubectl -f $ing create
 done
 

@@ -5,6 +5,13 @@ if ! which kubectl; then
   exit 1
 fi
 
+# delete the pvc
+for pvc in *-pvc.yml
+do
+  echo -n "Deleting $pvc... "
+  kubectl -f $pvc delete
+done
+
 # delete the ingress
 for ing in *-ing.yml
 do
