@@ -1,7 +1,7 @@
 ## GitLab CE image
 ## ref: https://hub.docker.com/r/gitlab/gitlab-ce/tags/
 ##
-image: gitlab/gitlab-ce:10.8.4-ce.0
+image: gitlab/gitlab-ce:9.4.1-ce.0
 
 ## Specify a imagePullPolicy
 ## 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
@@ -31,7 +31,7 @@ ingress:
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
   enabled: true
-  tls:
+  #tls:
       # - secretName: gitlab.cluster.local
       #   hosts:
       #     - gitlab.cluster.local
@@ -55,10 +55,10 @@ resources:
   ## redis, which helps some. Refer to the guidelines for larger installs.
   ## ref: https://docs.gitlab.com/ce/install/requirements.html#hardware-requirements
   requests:
-    memory: 1Gi
+    memory: 500m
     cpu: 500m
   limits:
-    memory: 2Gi
+    memory: 1Gi
     cpu: 1
 
 ## Enable persistence using Persistent Volume Claims
