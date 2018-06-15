@@ -12,12 +12,6 @@ do
   kubectl -f $pvc create
 done
 
-# create the ingress
-for ing in *-ing.yml
-do
-  echo -n "Creating $ing... "
-  kubectl -f $ing create
-done
 
 # create the services
 for svc in *-svc.yml

@@ -12,13 +12,6 @@ do
   kubectl -f $pvc delete
 done
 
-# delete the ingress
-for ing in *-ing.yml
-do
-  echo -n "Deleting $ing... "
-  kubectl -f $ing delete
-done
-
 
 # delete the services
 for svc in *-svc.yml
