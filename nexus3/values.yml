@@ -93,11 +93,10 @@ nexusBackup:
 ingress:
   enabled: true
   path: /
-  annotations: {}
+  annotations: {kubernetes.io/ingress.class: traefik}
   # # NOTE: Can't use 'false' due to https://github.com/jetstack/kube-lego/issues/173.
   # kubernetes.io/ingress.allow-http: true
   # kubernetes.io/ingress.class: gce
-    kubernetes.io/ingress.class: traefik
   # kubernetes.io/ingress.global-static-ip-name: ""
   # kubernetes.io/tls-acme: true
   tls:
