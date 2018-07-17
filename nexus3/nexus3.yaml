@@ -8,10 +8,10 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Gi
+      storage: 40Gi
 
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nexus3
@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: nexus3
-        image: sonatype/nexus3:3.12.0
+        image: sonatype/nexus3:3.12.1
         volumeMounts:
         - name: nexus-data
           mountPath: /sonatype-work
@@ -38,9 +38,6 @@ spec:
           requests:
             cpu: 800m
             memory: 1Gi
-          limits:
-            cpu: 1000m
-            memory: 2Gi
         ports:
         - containerPort: 8081
         readinessProbe:
@@ -59,23 +56,39 @@ spec:
             claimName: nexus-pvc
           
            
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: nexus3
   namespace: default
-  labels:
-    app: nexus3
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: nexus3
   ports:
   - name: nexus-ui
     port: 8081
-    nodePort: 30012
   - name: nexus-repo
     port: 5000
-    nodePort: 30013
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nexus3-ing
+spec:
+  rules:
+  - host: nexus.paasdev.k2software.cn
+    http:
+      paths:
+      - backend:
+          serviceName: nexus3
+          servicePort: 8081
+  - host: nexus-repo.paasdev.k2software.cn
+    http:
+      paths:
+      - backend:
+          serviceName: nexus3
+          servicePort: 5000
+
