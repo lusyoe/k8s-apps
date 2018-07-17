@@ -24,17 +24,19 @@ nexus:
   # The ports should only be changed if the nexus image uses a different port
   dockerPort: 5003
   nexusPort: 8081
-  serviceType: NodePort
+  serviceType: ClusterIP
   # securityContext:
   #   fsGroup: 2000
   livenessProbe:
     initialDelaySeconds: 30
     periodSeconds: 30
     failureThreshold: 6
+    path: /
   readinessProbe:
     initialDelaySeconds: 30
     periodSeconds: 30
     failureThreshold: 6
+    path: /
 
 nexusProxy:
   imageName: quay.io/travelaudience/docker-nexus-proxy
@@ -42,8 +44,8 @@ nexusProxy:
   imagePullPolicy: IfNotPresent
   port: 8080
   env:
-    nexusDockerHost:
-    nexusHttpHost:
+    nexusDockerHost: docker.paasdev.k2software.cn
+    nexusHttpHost: nexus.paasdev.k2software.cn
     enforceHttps: false
     cloudIamAuthEnabled: false
 ## If cloudIamAuthEnabled is set to true uncomment the variables below and remove this line
@@ -89,14 +91,15 @@ nexusBackup:
     storageSize: 8Gi
 
 ingress:
-  enabled: false
+  enabled: true
   path: /
   annotations: {}
   # # NOTE: Can't use 'false' due to https://github.com/jetstack/kube-lego/issues/173.
   # kubernetes.io/ingress.allow-http: true
   # kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.class: traefik
   # kubernetes.io/ingress.global-static-ip-name: ""
   # kubernetes.io/tls-acme: true
   tls:
-    enabled: true
+    enabled: false
     secretName: nexus-tls
