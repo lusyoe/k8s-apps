@@ -1,3 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nexus2-pvc
+spec:
+  storageClassName: nfs-dynamic-class
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,18 +33,20 @@ spec:
           name: nexus2-volume
         ports:
         - containerPort: 8081
-        redinessProbe:
+        readinessProbe:
           httpGet:
             path: /nexus
             port: 8081
-          initialDelaySeconds: 20
-          timeoutSeconds: 10
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
         livenessProbe:
           httpGet:
             path: /nexus
             port: 8081
-          initialDeplaySeconds: 20
-          timeoutSeconds: 10
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          timeoutSeconds: 5
+          failureThreshold: 5
       volumes:
       - name: nexus2-volume
         persistentVolumeClaim:
@@ -58,10 +73,11 @@ metadata:
   name: nexus2
 spec:
   rules:
-  - host: nexus.k2.com
+  - host: nexus.paasdev.k2software.cn
     http:
       paths:
       - path: /
         backend:
           serviceName: nexus2-service
           servicePort: nexus2-port
+

@@ -97,9 +97,9 @@ ingress:
   # # NOTE: Can't use 'false' due to https://github.com/jetstack/kube-lego/issues/173.
   # kubernetes.io/ingress.allow-http: true
   # kubernetes.io/ingress.class: gce
-    kubernetes.io/ingress.class: traefik
+  # kubernetes.io/ingress.class: traefik
   # kubernetes.io/ingress.global-static-ip-name: ""
   # kubernetes.io/tls-acme: true
   tls:
-    enabled: false
+    enabled: true
     secretName: nexus-tls
