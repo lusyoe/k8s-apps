@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kb-pvc
+spec:
+  storageClassName: nfs-dynamic-class
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kb-deployment
+  labels:
+    app: kb-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kb-deployment
+  template:
+    metadata:
+      labels:
+        app: kb-deployment
+    spec:
+      containers:
+      - name: kb-deployment
+        image: lusyoe/atlassian-confluence:latest
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: kb-data
+            mountPath: "/var/atlassian/confluence/"
+        resources:
+          requests:
+            cpu: 150m
+            memory: 512Mi
+      volumes:
+      - name: kb-data
+        persistentVolumeClaim:
+          claimName: kb-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kb-svc
+spec:
+  selector:
+    app: kb-deployment
+  ports:
+  - port: 8090
+    targetPort: 8090
+    name: kb-ui-port
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kb-ui
+spec:
+  rules:
+  - host: kb.paasdev.k2software.cn
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kb-svc
+          servicePort: kb-ui-port
+
