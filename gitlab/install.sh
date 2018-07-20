@@ -5,27 +5,35 @@ if ! which kubectl; then
   exit 1
 fi
 
-# create the pvc
+# apply the pvc
 for pvc in *-pvc.yml
 do
   echo -n "Creating $pvc... "
-  kubectl -f $pvc create
+  kubectl -f $pvc apply
 done
 
 
-# create the services
+# apply the services
 for svc in *-svc.yml
 do
   echo -n "Creating $svc... "
-  kubectl -f $svc create
+  kubectl -f $svc apply
 done
 
-# create the deployments
+# apply the deployments
 for dep in *-deployment.yml
 do
   echo -n "Creating $dep... "
-  kubectl -f $dep create
+  kubectl -f $dep apply
 done
+
+# apply the deployments
+for ing in *-ing.yml
+do
+  echo -n "Creating $ing... "
+  kubectl -f $ing apply
+done
+
 
 # list pod,rc,svc
 echo "Pod:"

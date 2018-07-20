@@ -26,3 +26,10 @@ do
   echo -n "Deleting $dep... "
   kubectl -f $dep delete
 done
+
+# delete the ingress
+for ing in *-ing.yml
+do
+  echo -n "Deleting $ing... "
+  kubectl -f $ing delete
+done

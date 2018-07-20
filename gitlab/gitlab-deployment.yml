@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gitlab
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: gitlab
-        image: sameersbn/gitlab:10.8.3-1
+        image: sameersbn/gitlab:11.0.4
         env:
         - name: TZ
           value: Asia/Shanghai
@@ -29,10 +29,10 @@ spec:
         - name: GITLAB_ROOT_PASSWORD
           value: K2pass!!
         - name: GITLAB_ROOT_EMAIL
-          value:
+          value: admin@example.com
 
         - name: GITLAB_HOST
-          value: git.k2.com
+          value: git.paasdev.k2software.cn
         - name: GITLAB_PORT
           value: "80"
         - name: GITLAB_SSH_PORT
@@ -69,17 +69,17 @@ spec:
         - name: SMTP_ENABLED
           value: "false"
         - name: SMTP_DOMAIN
-          value: www.example.com
+          value: mail.aliyun.com
         - name: SMTP_HOST
-          value: smtp.gmail.com
+          value: smtp.aliyun.com
         - name: SMTP_PORT
-          value: "587"
+          value: "25"
         - name: SMTP_USER
-          value: mailer@example.com
+          value: 
         - name: SMTP_PASS
-          value: password
+          value: 
         - name: SMTP_STARTTLS
-          value: "true"
+          value: "false"
         - name: SMTP_AUTHENTICATION
           value: login
 
@@ -97,6 +97,27 @@ spec:
           value: "true"
         - name: IMAP_STARTTLS
           value: "false"
+
+        - name: LDAP_ENABLED
+          value: "true"
+        - name: LDAP_HOST
+          value: "ldap-openldap-service"
+        - name: LDAP_PORT
+          value: "389"
+        - name: LDAP_UID
+          value: "cn"
+        - name: LDAP_METHOD
+          value: "plain"
+        - name: LDAP_BIND_DN
+          value: "cn=admin,dc=k2software,dc=cn"
+        - name: LDAP_PASS
+          value: "K2pass!!!"
+        - name: LDAP_ALLOW_USERNAME_OR_EMAIL_LOGIN
+          value: "false"
+        - name: LDAP_BASE
+          value: "ou=people,dc=k2software,dc=cn"
+        - name: LDAP_USER_FILTER
+          value: "(memberOf=ou=gitlab-users,ou=gitlab-groups,ou=groups,dc=k2software,dc=cn)"
         ports:
         - name: http
           containerPort: 80
@@ -111,14 +132,12 @@ spec:
             port: 80
           initialDelaySeconds: 180
           timeoutSeconds: 5
-          periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /
             port: 80
-          initialDelaySeconds: 30
-          periodSeconds: 5
-          timeoutSeconds: 5
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
       volumes:
       - name: data
         persistentVolumeClaim:
