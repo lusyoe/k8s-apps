@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels: 
+    app: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      name: nginx
+      labels: 
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: lusyoe/nginx-fs:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: web
+          volumeMounts:
+          - mountPath: /var/www
+            name: www
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+      volumes:
+      - name: www
+        persistentVolumeClaim:
+          claimName: nginx-fs-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fs-svc
+spec:
+  ports:
+  - port: 80
+    name: fs-svc-port
+  selector:
+    app: nginx
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: fs-ing
+spec:
+  rules:
+  - host: lib.paasdev.k2software.cn
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: fs-svc
+          servicePort: fs-svc-port
