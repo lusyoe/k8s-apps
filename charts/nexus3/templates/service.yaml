@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "nexus3.fullname" . }}
+  labels:
+    app: {{ template "nexus3.name" . }}
+    chart: {{ template "nexus3.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: ui-port
+    port: {{ .Values.service.ui.port }}
+    {{if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.ui.nodePort)))}}
+    nodePort: {{.Values.service.ui.nodePort}}
+    {{end}}
+  - name: docker-port
+    port: {{ .Values.service.docker.port }}
+    {{if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.docker.nodePort)))}}
+    nodePort: {{.Values.service.docker.nodePort}}
+    {{end}}
+  selector:
+    app: {{ template "nexus3.name" . }}
+    release: {{ .Release.Name }}
