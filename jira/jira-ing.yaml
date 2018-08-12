@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: jira-ing
+spec:
+  rules:
+  - host: jira.lusyoe.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: jira
+          servicePort: jira-port

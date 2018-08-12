@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jira
+  name: jira
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jira
+  template:
+    metadata:
+      labels:
+        app: jira
+    spec:
+      containers:
+      - image: lusyoe/jira:v7.5.0
+        imagePullPolicy: IfNotPresent
+        name: jira
+        volumeMounts:
+          - name: jira-data
+            mountPath: "/var/atlassian/jira/"
+        ports:
+        - containerPort: 8080
+        resources: {}
+      volumes:
+        - name: jira-data
+          persistentVolumeClaim:
+            claimName: jira-pvc
