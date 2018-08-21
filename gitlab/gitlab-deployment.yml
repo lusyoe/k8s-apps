@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: gitlab
-        image: sameersbn/gitlab:11.0.4
+        image: sameersbn/gitlab:11.1.4
         env:
         - name: TZ
           value: Asia/Shanghai
@@ -131,6 +131,7 @@ spec:
             path: /
             port: 80
           initialDelaySeconds: 180
+          periodSeconds: 60
           timeoutSeconds: 5
         readinessProbe:
           httpGet:
