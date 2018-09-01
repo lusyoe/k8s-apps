@@ -63,7 +63,7 @@ metadata:
   name: kb-ui
 spec:
   rules:
-  - host: kb.paasdev.k2software.cn
+  - host: kb.lusyoe.com
     http:
       paths:
       - path: /
