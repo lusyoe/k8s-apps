@@ -17,13 +17,13 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: lusyoe/nginx-fs:latest
+          image: lusyoe/nginx-fs:v2.3-fancy
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
               name: web
           volumeMounts:
-          - mountPath: /var/www
+          - mountPath: /var/www/html
             name: www
           resources:
             requests:
