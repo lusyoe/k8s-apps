@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "owncloud.fullname" . }}
+  labels:
+    app: {{ template "owncloud.name" . }}
+    chart: {{ template "owncloud.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "owncloud.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "owncloud.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: TZ
+            value: Asia/Shanghai
+          - name: OWNCLOUD_DOMAIN
+            value: owncloud.luhaoyuan.com
+          - name: OWNCLOUD_DB_TYPE
+            value: mysql
+          - name: OWNCLOUD_DB_NAME
+            value: owncloud_k8s
+          - name: OWNCLOUD_DB_USERNAME
+            value: root
+          - name: OWNCLOUD_DB_PASSWORD
+            value: lu123456
+          - name: OWNCLOUD_DB_HOST
+            value: 192.168.0.2
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          #livenessProbe:
+          #  httpGet:
+          #    path: /
+          #    port: http
+          #readinessProbe:
+          #  httpGet:
+          #    path: /
+          #    port: http
+          volumeMounts:
+          - name: data
+            mountPath: /mnt/data
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: owncloud-pvc
+
