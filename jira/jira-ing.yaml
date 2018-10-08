@@ -4,7 +4,7 @@ metadata:
   name: jira-ing
 spec:
   rules:
-  - host: jira.lusyoe.com
+  - host: jira.paasdev.k2software.cn
     http:
       paths:
       - path: /

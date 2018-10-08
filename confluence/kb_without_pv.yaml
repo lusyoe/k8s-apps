@@ -1,16 +1,3 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: kb-pvc
-spec:
-  storageClassName: nfs-disk-class
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 80Gi
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -29,20 +16,12 @@ spec:
     spec:
       containers:
       - name: kb-deployment
-        image: lusyoe/atlassian-confluence:latest
+        image: lusyoe/atlassian-confluence:v1.0
         imagePullPolicy: IfNotPresent
-        volumeMounts:
-          - name: kb-data
-            mountPath: "/var/atlassian/confluence/"
         resources:
           requests:
             cpu: 150m
             memory: 512Mi
-      volumes:
-      - name: kb-data
-        persistentVolumeClaim:
-          claimName: kb-pvc
-
 ---
 apiVersion: v1
 kind: Service
@@ -63,7 +42,7 @@ metadata:
   name: kb-ui
 spec:
   rules:
-  - host: kb.luhaoyuan.com
+  - host: kb.paasdev.k2software.cn
     http:
       paths:
       - path: /

@@ -6,10 +6,10 @@ metadata:
     release: stable
 spec:
   capacity:
-    storage: 20Gi
+    storage: 50Gi
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Recycle
   nfs:
-    server: {{ server_ip }}
-    path: {{ server_path }}
+    server: 172.19.7.147
+    path: /disk/lib
