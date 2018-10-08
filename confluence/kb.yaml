@@ -63,7 +63,7 @@ metadata:
   name: kb-ui
 spec:
   rules:
-  - host: kb.lusyoe.com
+  - host: kb.luhaoyuan.com
     http:
       paths:
       - path: /
