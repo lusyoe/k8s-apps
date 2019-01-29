@@ -11,5 +11,5 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Recycle
   nfs:
-    server: 172.19.7.147
-    path: /disk/lib
+    server: 172.18.8.20
+    path: /data/nfs/lib
